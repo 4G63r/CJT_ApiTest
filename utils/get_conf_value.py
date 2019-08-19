@@ -17,14 +17,18 @@ def get_inte_host():
 
 
 def get_host_addr():
-    """获取host地址"""
-    env = r.get_conf_value('host_addr', 'addr')
-    if env.upper() == 'TEST':
-        return get_test_host()
-    elif env.upper() == 'INTE':
-        return get_inte_host()
+    """
+    获取host地址
+    :return: https://inte-cloud.chanjet.com/cc/0000/0
+    """
+    env_mode = r.get_conf_value('env_mode', 'mode')
+    app_name = r.get_conf_value('app_name', 'name')
+    if env_mode.upper() == 'TEST':
+        return get_test_host().replace('app_name', app_name)
+    elif env_mode.upper() == 'INTE':
+        return get_inte_host().replace('app_name', app_name)
     else:
-        raise Exception('env参数错误!!!')
+        raise Exception('env_mode配置错误!!!')
 
 
 def get_account_info():
