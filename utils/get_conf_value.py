@@ -24,7 +24,6 @@ def get_host_addr():
     """
     env_mode = r.get_conf_value('env_mode', 'mode')
     app_name = r.get_conf_value('app_name', 'name').lower()
-    print(app_name)
     if env_mode.upper() == 'TEST':
         return get_test_host().replace('app_name', app_name)
     elif env_mode.upper() == 'INTE':
@@ -54,3 +53,11 @@ def get_account_info():
 def get_platform():
     """获取平台名称 - web/app"""
     return r.get_conf_value('platform', 'name').upper()
+
+
+def get_web_uid():
+    return r.get_conf_value('web', 'uid')
+
+
+def get_web_auth():
+    return r.get_conf_value('web', 'auth')

@@ -19,10 +19,10 @@ class Login:
 
         self.platform = get_conf_value.get_platform()
         self.host_addr = get_conf_value.get_host_addr()
-        self.access_token = self._access_token
-        self.domain_org = self._domain_and_orgaccount
+        self.access_token = self.__access_token
+        self.domain_org = self.__domain_and_orgaccount
         self.url = self.url_with_domain_and_orgaccount
-        self._auth = self.auth
+        self.auth = self.__auth
         self.session = self.session_by_login()
 
     def login_1(self):
@@ -73,14 +73,14 @@ class Login:
         json_r = baseRequest.base_request('post', url, data=data).json()
         return json_r
 
-    def login_web(self):
-        url = 'https://inte-passport.chanjet.com/loginV2/webLogin?callback=jQuery111308033636904233341_1566266649823&auth_username=15899991005&password=e10adc3949ba59abbe56e057f20f883e&auth_code=4H1PLP&jsonp=1&_=1566266649827'
-
     @property
-    def _access_token(self):
-        r = self.login_1()
-        access_token = r.get('data').get('createToken').get('accessToken')
-        return access_token
+    def __access_token(self):
+        if self.platform == 'APP':
+            r = self.login_1()
+            access_token = r.get('data').get('createToken').get('accessToken')
+            return access_token
+        else:
+            return
 
     def login_2(self):
         url = '{}/mobile/cia/graphql?user_req_id=1566209018073_1'.format(self.host_addr)
@@ -123,15 +123,18 @@ class Login:
         return json_r
 
     @property
-    def _domain_and_orgaccount(self):
+    def __domain_and_orgaccount(self):
         """
         获取domain和orgaccount值
         :return: {'orgAccount': 'uruqysjoz6oz', 'domainName': 'edbtj1272l'}
         """
-        parse_data = self.login_3().get('data').get('accountBook').get('tenant')
-        domain_name = parse_data.get('domainName')
-        org_account = parse_data.get('org').get('orgAccount')
-        return {'orgAccount': org_account, 'domainName': domain_name}
+        if self.platform == 'APP':
+            parse_data = self.login_3().get('data').get('accountBook').get('tenant')
+            domain_name = parse_data.get('domainName')
+            org_account = parse_data.get('org').get('orgAccount')
+            return {'orgAccount': org_account, 'domainName': domain_name}
+        else:
+            return
 
     @property
     def url_with_domain_and_orgaccount(self):
@@ -139,32 +142,38 @@ class Login:
         获取url前缀
         :return: https://inte-cloud.chanjet.com/cc/ug3qc3gv0h7m/wcw78mp1n3
         """
-        url = self.host_addr.replace('0000/0', '{}/{}'.format(self.domain_org.get('orgAccount'),
-                                                              self.domain_org.get('domainName')))
+        if self.platform == 'APP':
+            url = self.host_addr.replace('0000/0', '{}/{}'.format(self.domain_org.get('orgAccount'),
+                                                                  self.domain_org.get('domainName')))
+        else:
+            url = self.host_addr.replace('0000/0', get_conf_value.get_web_uid())
         return url
 
     @property
-    def auth(self):
-        url = '{}/mobile/cia/graphql?user_req_id=1566209020090_4'.format(self.url)
-        data = {
-            "query": '\n            mutation CreatePassport {\n                passport: '
-                     'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        ' % (
-                         self.access_token, self.domain_org.get('orgAccount')),
-            "mutation": '\n            mutation CreatePassport {\n                passport: '
-                        'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        '
-                        % (self.access_token, self.domain_org.get('orgAccount'))
-        }
-        headers = {
-            'accesstoken': self.access_token
-        }
-        json_r = baseRequest.base_request('post', url, data=data, headers=headers).json()
-        token = json_r.get('data').get('passport')
-        return token
+    def __auth(self):
+        if self.platform == 'APP':
+            url = '{}/mobile/cia/graphql?user_req_id=1566209020090_4'.format(self.url)
+            data = {
+                "query": '\n            mutation CreatePassport {\n                passport: '
+                         'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        ' % (
+                             self.access_token, self.domain_org.get('orgAccount')),
+                "mutation": '\n            mutation CreatePassport {\n                passport: '
+                            'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        '
+                            % (self.access_token, self.domain_org.get('orgAccount'))
+            }
+            headers = {
+                'accesstoken': self.access_token
+            }
+            json_r = baseRequest.base_request('post', url, data=data, headers=headers).json()
+            token = json_r.get('data').get('passport')
+            return token
+        else:
+            return get_conf_value.get_web_auth()
 
     @property
-    def _headers(self):
+    def __headers(self):
         headers = {
-            'authorization': 'Bearer %s' % self._auth,
+            'authorization': 'Bearer %s' % self.auth,
             'accesstoken': self.access_token,
         }
         return headers
@@ -176,5 +185,17 @@ class Login:
                      "getAccountBookCount {\n                    count\n                }\n            }\n        ",
             "variables": {}
         }
-        s = baseRequest.session_('post', url, data=data, headers=self._headers)
+        s = baseRequest.session_('post', url, data=data, headers=self.__headers)
         return s
+
+    # ---------------- WEB ------------------
+
+    def token(self):
+        url = 'https://inte-cloud.chanjet.com/cc/u5ik3iphbm4y/rvotwvgcwv/token?code=56aaad6d62d94a70b15d881908690193&domainName=u5ik3iphbm4y&guest=false&user_req_id=000000000x16cae21663c'
+        r = baseRequest.base_request('get', url)
+        return r.text
+
+
+if __name__ == '__main__':
+    l = Login()
+    print(l.url)
