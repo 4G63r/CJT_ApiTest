@@ -49,6 +49,8 @@ def session_(method, url, headers=None, data=None, timeout=6, verify=False):
     :param verify: SSL认证(optional)
     :return: Session对象
     """
+    urllib3.disable_warnings()
+
     s = requests.Session()
     s.headers = headers
     try:
