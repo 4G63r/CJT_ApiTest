@@ -4,6 +4,7 @@
 # @Time: 2019-08-19 16:04
 
 from utils.readConfUtil import ReadConfUtil
+from utils.MD5_encode import md5_encode
 
 r = ReadConfUtil()
 
@@ -22,7 +23,8 @@ def get_host_addr():
     :return: https://inte-cloud.chanjet.com/cc/0000/0
     """
     env_mode = r.get_conf_value('env_mode', 'mode')
-    app_name = r.get_conf_value('app_name', 'name')
+    app_name = r.get_conf_value('app_name', 'name').lower()
+    print(app_name)
     if env_mode.upper() == 'TEST':
         return get_test_host().replace('app_name', app_name)
     elif env_mode.upper() == 'INTE':
@@ -32,7 +34,23 @@ def get_host_addr():
 
 
 def get_account_info():
-    """获取用户账密"""
+    """
+    获取用户账密
+    如果平台是WEB端，密码将MD5加密处理
+    :return:
+    """
+    platform_name = get_platform()
     un = r.get_conf_value('account', 'username')
     pw = r.get_conf_value('account', 'password')
-    return {'username': un, 'password': pw}
+
+    if platform_name == 'APP':
+        return {'username': un, 'password': pw}
+    elif platform_name == 'WEB':
+        return {'username': un, 'password': md5_encode(pw)}
+    else:
+        return
+
+
+def get_platform():
+    """获取平台名称 - web/app"""
+    return r.get_conf_value('platform', 'name').upper()

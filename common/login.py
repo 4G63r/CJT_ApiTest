@@ -17,11 +17,12 @@ class Login:
             self.username = username
             self.password = password
 
+        self.platform = get_conf_value.get_platform()
         self.host_addr = get_conf_value.get_host_addr()
         self.access_token = self._access_token
         self.domain_org = self._domain_and_orgaccount
-        self._url = self.url_with_domain_and_orgaccount
-        self.auth = self._auth
+        self.url = self.url_with_domain_and_orgaccount
+        self._auth = self.auth
         self.session = self.session_by_login()
 
     def login_1(self):
@@ -71,6 +72,9 @@ class Login:
         }
         json_r = baseRequest.base_request('post', url, data=data).json()
         return json_r
+
+    def login_web(self):
+        url = 'https://inte-passport.chanjet.com/loginV2/webLogin?callback=jQuery111308033636904233341_1566266649823&auth_username=15899991005&password=e10adc3949ba59abbe56e057f20f883e&auth_code=4H1PLP&jsonp=1&_=1566266649827'
 
     @property
     def _access_token(self):
@@ -140,15 +144,15 @@ class Login:
         return url
 
     @property
-    def _auth(self):
-        url = '{}/mobile/cia/graphql?user_req_id=1566209020090_4'.format(self._url)
+    def auth(self):
+        url = '{}/mobile/cia/graphql?user_req_id=1566209020090_4'.format(self.url)
         data = {
             "query": '\n            mutation CreatePassport {\n                passport: '
                      'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        ' % (
-                         self.access_token, self.domain_org['orgAccount']),
+                         self.access_token, self.domain_org.get('orgAccount')),
             "mutation": '\n            mutation CreatePassport {\n                passport: '
                         'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        '
-                        % (self.access_token, self.domain_org['orgAccount'])
+                        % (self.access_token, self.domain_org.get('orgAccount'))
         }
         headers = {
             'accesstoken': self.access_token
@@ -160,13 +164,13 @@ class Login:
     @property
     def _headers(self):
         headers = {
-            'authorization': 'Bearer %s' % self.auth,
+            'authorization': 'Bearer %s' % self._auth,
             'accesstoken': self.access_token,
         }
         return headers
 
     def session_by_login(self):
-        url = '{}/mobile/graphql?user_req_id=1566229590096_40'.format(self._url)
+        url = '{}/mobile/graphql?user_req_id=1566229590096_40'.format(self.url)
         data = {
             "query": "\n            query getAccountBookCount {\n                accountBooksCount: "
                      "getAccountBookCount {\n                    count\n                }\n            }\n        ",

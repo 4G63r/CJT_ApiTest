@@ -53,16 +53,16 @@ def session_(method, url, headers=None, data=None, timeout=6, verify=False):
     s.headers = headers
     try:
         if method.upper() == 'GET':
-            res = s.get(url, params=data, timeout=timeout, verify=verify)
+            s.get(url, params=data, timeout=timeout, verify=verify)
         elif method.upper() == 'POST':
-            res = s.post(url, json=data, timeout=timeout, verify=verify)
+            s.post(url, json=data, timeout=timeout, verify=verify)
         elif method.upper() == 'PUT':
-            res = s.put(url, json=data, timeout=timeout, verify=verify)
+            s.put(url, json=data, timeout=timeout, verify=verify)
         elif method.upper() == 'DELETE':
-            res = s.delete(url, json=data, timeout=timeout, verify=verify)
+            s.delete(url, json=data, timeout=timeout, verify=verify)
         else:
-            res = None
+            s = None
     except AttributeError:
         raise AttributeError
     else:
-        return res
+        return s
