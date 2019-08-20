@@ -194,7 +194,7 @@ class Login:
         url = 'https://inte-cloud.chanjet.com/cc/u5ik3iphbm4y/rvotwvgcwv/token?code=56aaad6d62d94a70b15d881908690193&domainName=u5ik3iphbm4y&guest=false&user_req_id=000000000x16cae21663c'
         r = baseRequest.base_request('get', url)
         return r.text
-        print(11111)
+
 
 if __name__ == '__main__':
     l = Login()
