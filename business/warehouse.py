@@ -11,7 +11,8 @@ class WarehouseBusiness:
         self.url = url
         self.s = session
 
-    def get_warehouse_token(self):
+    @property
+    def warehouse_token(self):
         """获取仓库token"""
         url = '{}/entities/Warehouse/blank?user_req_id=e33e804adx16cb238be2d'.format(self.url)
         json_r = self.s.get(url).json()
@@ -37,13 +38,13 @@ class WarehouseBusiness:
             "warehouseCategoryId": warehouse_category_id,
             "comments": "备注是没有备注",
             "statusEnum": "A",
-            "txnToken": self.get_warehouse_token()
+            "txnToken": self.warehouse_token
         }
         text_r = self.s.post(url, json=data).text
         if '仓库名称重复' in text_r:
             raise Exception('仓库名称重复，请创建其他仓库')
         else:
-            print('仓库<%s>创建成功，id为1' % warehouse_name)
+            print('仓库<%s>创建成功，id为<%s>' % (warehouse_name, self.get_warehouse_id_by_name(warehouse_name)))
 
     def get_warehouse_infos(self):
         """
@@ -68,7 +69,7 @@ class WarehouseBusiness:
         """根据仓库名称查询仓库id"""
         warehouse_infos = self.get_warehouse_infos()
         if warehouse_name in warehouse_infos:
-            id_ = self.get_warehouse_infos().get(warehouse_name)
+            id_ = warehouse_infos.get(warehouse_name)
         else:
             print('仓库名称<%s>不存在！' % warehouse_name)
             id_ = None
@@ -89,6 +90,4 @@ class WarehouseBusiness:
             if r.status_code == 200:
                 print('仓库<%s>删除成功' % warehouse_name)
             else:
-                print('仓库<%s>没有成功删除！')
-        else:
-            raise Exception('仓库名称不存在')
+                print('仓库<%s>没有成功删除！' % warehouse_name)

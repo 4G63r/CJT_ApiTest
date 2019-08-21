@@ -5,11 +5,8 @@
 
 from common.login import Login
 from business.warehouse import WarehouseBusiness
+from business.custvendor import CustVendor
 
 login = Login()
 front_url = login.url
 s = login.session
-
-w = WarehouseBusiness(front_url, s)
-print(w.get_warehouse_infos())
-print(1)
