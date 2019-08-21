@@ -12,3 +12,4 @@ s = login.session
 
 w = WarehouseBusiness(front_url, s)
 print(w.get_warehouse_infos())
+print(1)
