@@ -180,10 +180,9 @@ class Login:
         else:
             headers = {
                 'authorization': self.auth,
-                'accesstoken': self.access_token,
+                # 'Content-Type': 'application/json',
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, '
-                              'like Gecko) '
-                              'Version/12.1.2 Safari/605.1.15 ',
+                              'like Gecko) Version/12.1.2 Safari/605.1.15'
             }
         return headers
 
@@ -196,7 +195,7 @@ class Login:
                 "variables": {}
             }
         else:
-            url = '{}/messageCenter/query?user_req_id=e33e804adx16cb1d04cdc'.format(self.url)
+            url = '{}/messageCenter/query?user_req_id=e33e804adx16cb21aec86'.format(self.url)
             data = {
                 "moduleType": 1,
                 "pageSize": 20,
@@ -207,13 +206,3 @@ class Login:
                 "group": []
             }
         return baseRequest.session_('post', url, data=data, headers=self.__headers)
-
-    def test_aa(self):
-        url = '{}/homepage/getRecentSales?user_req_id=e33e804adx16cb1d85fe6'.format(self.url)
-        r = self.session.post(url)
-        return r.text
-
-
-if __name__ == '__main__':
-    l = Login()
-    print(l.test_aa())
