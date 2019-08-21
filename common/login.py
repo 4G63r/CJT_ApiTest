@@ -158,7 +158,7 @@ class Login:
                          'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        ' % (
                              self.access_token, self.domain_org.get('orgAccount')),
                 "mutation": '\n            mutation CreatePassport {\n                passport: '
-                            'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        '
+                            'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n '
                             % (self.access_token, self.domain_org.get('orgAccount'))
             }
             headers = {
@@ -172,30 +172,48 @@ class Login:
 
     @property
     def __headers(self):
-        headers = {
-            'authorization': 'Bearer %s' % self.auth,
-            'accesstoken': self.access_token,
-        }
+        if self.platform == 'APP':
+            headers = {
+                'authorization': 'Bearer %s' % self.auth,
+                'accesstoken': self.access_token,
+            }
+        else:
+            headers = {
+                'authorization': self.auth,
+                'accesstoken': self.access_token,
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, '
+                              'like Gecko) '
+                              'Version/12.1.2 Safari/605.1.15 ',
+            }
         return headers
 
     def session_by_login(self):
-        url = '{}/mobile/graphql?user_req_id=1566229590096_40'.format(self.url)
-        data = {
-            "query": "\n            query getAccountBookCount {\n                accountBooksCount: "
-                     "getAccountBookCount {\n                    count\n                }\n            }\n        ",
-            "variables": {}
-        }
-        s = baseRequest.session_('post', url, data=data, headers=self.__headers)
-        return s
+        if self.platform == 'APP':
+            url = '{}/mobile/graphql?user_req_id=1566229590096_40'.format(self.url)
+            data = {
+                "query": "\n            query getAccountBookCount {\n                accountBooksCount: "
+                         "getAccountBookCount {\n                    count\n                }\n            }\n        ",
+                "variables": {}
+            }
+        else:
+            url = '{}/messageCenter/query?user_req_id=e33e804adx16cb1d04cdc'.format(self.url)
+            data = {
+                "moduleType": 1,
+                "pageSize": 20,
+                "take": 20,
+                "skip": 0,
+                "page": 1,
+                "sort": [],
+                "group": []
+            }
+        return baseRequest.session_('post', url, data=data, headers=self.__headers)
 
-    # ---------------- WEB ------------------
-
-    def web_session(self):
-        url = 'https://inte-cloud.chanjet.com/cc/u5ik3iphbm4y/rvotwvgcwv/token?code=56aaad6d62d94a70b15d881908690193&domainName=u5ik3iphbm4y&guest=false&user_req_id=000000000x16cae21663c'
-        r = baseRequest.base_request('get', url)
+    def test_aa(self):
+        url = '{}/homepage/getRecentSales?user_req_id=e33e804adx16cb1d85fe6'.format(self.url)
+        r = self.session.post(url)
         return r.text
 
 
 if __name__ == '__main__':
     l = Login()
-    print(l.url)
+    print(l.test_aa())

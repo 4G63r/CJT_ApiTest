@@ -35,7 +35,7 @@ def get_host_addr():
 def get_account_info():
     """
     获取用户账密
-    如果平台是WEB端，密码将MD5加密处理
+    如果平台是WEB端，密码需要MD5加密处理
     :return:
     """
     platform_name = get_platform()
