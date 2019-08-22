@@ -3,6 +3,7 @@
 # @Author: songxiao
 # @Time: 2019-08-21 13:43
 
+# import urllib3
 from time import sleep
 import datetime
 from common.login import Login
@@ -30,10 +31,11 @@ init_data = {
 r = s.post(url_init, json=init_data).json()
 total_num = r.get('total')  # 记录开始数量
 
-RUN_TIMES = 5  # 执行次数
+RUN_TIMES = 1000  # 执行次数
 
 
 def test_1():
+    # urllib3.disable_warnings()
     txn_token = g.token
 
     url = 'https://inte-cloud.chanjet.com/cc/u5ik3iphbm4y/rvotwvgcwv/voucher/GoodsIssue?user_req_id' \
@@ -263,6 +265,19 @@ for i in range(RUN_TIMES):
     i_d = test_1()
     total_num += 1
     print('成功创建第<%s>个销货单，id<%s>' % (total_num, i_d))
-    sleep(0.3)
+    # print('成功创建销货单，id<%s>' % i_d)
+    # sleep(0.3)
 time_e = datetime.datetime.now()
 print('创建%s条数据共耗时%s秒' % (RUN_TIMES, round((time_e - time_s).total_seconds(), 1)))
+
+# if __name__ == '__main__':
+#     import multiprocessing
+#
+#     if __name__ == "__main__":
+#         pool = multiprocessing.Pool(processes=2)
+#         for j in range(10):
+#             msg = "hello %s" % (j)
+#             pool.apply_async(test_2, (msg,))
+#         pool.close()
+#         pool.join()
+#         print("Sub-process(es) done.")
