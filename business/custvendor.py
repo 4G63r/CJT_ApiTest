@@ -104,7 +104,7 @@ class CustVendor:
     def get_party_infos(self):
         """
         查询所有往来单位信息
-        :return: {'宋宵测试单位1': 701312929103873}
+        :return: {'宋宵测试单位1': 701354939252737}
         """
         url = '{}/data/grid/CustVendor.list?user_req_id=e33e804adx16cb3c780e4'.format(self.url)
         data = {
