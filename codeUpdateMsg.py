@@ -17,12 +17,13 @@ import time
 
 tokens = {
     'SCU58060Tcc362d832dee07b390f149a76147a9cb5d5eb24d11c13': 'SONGXIAO',
-    'SCU58069Tf503b96e8a1f5f3792c24a5407ba73ae5d5f3ede21abc': 'XIAOLI'
+    'SCU58069Tf503b96e8a1f5f3792c24a5407ba73ae5d5f3ede21abc': 'XIAOLI',
+    'SCU58073T976ac35308b187aacb419f7ef78197985d5f4cd940e4d': 'YUXIN'
 }
 
 
 def cur_time():
-    return time.strftime('%Y_%m_%d_%H_%M_%S')
+    return time.strftime('%Y%m%d_%H点%M分%S秒')
 
 
 def get_name_by_token(token):
@@ -30,7 +31,7 @@ def get_name_by_token(token):
 
 
 data = {
-    'text': '接口脚本已更新_%s' % cur_time(),
+    'text': 'Python代码已更新_%s' % cur_time(),
     'desp': '脚本已更新，请拉取最新代码进行测试！%s' % cur_time()
 }
 
