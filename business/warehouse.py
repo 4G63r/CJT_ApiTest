@@ -15,7 +15,9 @@ class WarehouseBusiness:
     def warehouse_token(self):
         """获取仓库token"""
         url = '{}/entities/Warehouse/blank?user_req_id=e33e804adx16cb238be2d'.format(self.url)
-        json_r = self.s.get(url).json()
+        # json_r = self.s.get(url).json()
+        json_r = self.s.get(url)
+        print(json_r.status_code)
         token = json_r.get('txnToken')
         return token
 

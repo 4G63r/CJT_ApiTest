@@ -29,14 +29,15 @@ init_data = {
     "sort": [],
     "bindVars": {},
     "group": [],
-    "criteriaStr": "bizDate >= DATE(20190822) AND bizDate < DATE_ADD(DATE('20190822'),INTERVAL 1 DAY) AND SYSDATE() > "
+    "criteriaStr": "bizDate >= DATE(20190823) AND bizDate < DATE_ADD(DATE('20190822'),INTERVAL 1 DAY) AND SYSDATE() > "
                    "0 AND redBlueFlagEnum='BLUE'",
     "havingStr": ""
 }
-r = s.post(url_init, json=init_data).json()
+r = s.post(url_init, json=init_data)
+print(r)
 total_num = r.get('total')  # 记录开始数量
 
-RUN_TIMES = 2000  # 执行次数
+RUN_TIMES = 1  # 执行次数
 
 
 def test_1():
