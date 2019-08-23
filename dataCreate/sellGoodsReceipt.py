@@ -3,9 +3,14 @@
 # @Author: songxiao
 # @Time: 2019-08-21 13:43
 
-# import urllib3
-from time import sleep
+import sys
+import os
 import datetime
+
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.dirname(curPath)
+sys.path.append(rootPath)
+
 from common.login import Login
 from business.goods import Goods
 
@@ -31,7 +36,7 @@ init_data = {
 r = s.post(url_init, json=init_data).json()
 total_num = r.get('total')  # 记录开始数量
 
-RUN_TIMES = 1000  # 执行次数
+RUN_TIMES = 2000  # 执行次数
 
 
 def test_1():

@@ -5,7 +5,7 @@
 
 
 class WarehouseBusiness:
-    """仓库业务相关操作"""
+    """仓库相关业务"""
 
     def __init__(self, url, session):
         self.url = url
@@ -19,18 +19,25 @@ class WarehouseBusiness:
         token = json_r.get('txnToken')
         return token
 
-    def get_warehouse_category(self):
+    def get_warehouse_category_id(self):
         """
         获取仓库分类id
-        :return: {分类名称: 分类id} - {'未分类': 691651268182016}
+        :return: -> {'未分类': 691651268182016}
         """
         url = '{}/data/tree/WarehouseCategory?bindVars=&user_req_id=e33e804adx16cb22cd7aa'.format(self.url)
         json_r = self.s.get(url).json()
         return {i.get('name'): i.get('id') for i in json_r}
 
     def create_warehouse(self, warehouse_name, warehouse_category_id=None):
+        """
+        创建仓库
+
+        :param warehouse_name: str
+        :param warehouse_category_id: 默认为未分类
+        :return:
+        """
         if warehouse_category_id is None:
-            warehouse_category_id = self.get_warehouse_category().get('未分类')
+            warehouse_category_id = self.get_warehouse_category_id().get('未分类')
 
         url = '{}/entity/Warehouse?user_req_id=e33e804adx16cb22a0428'.format(self.url)
         data = {
@@ -42,14 +49,14 @@ class WarehouseBusiness:
         }
         text_r = self.s.post(url, json=data).text
         if '仓库名称重复' in text_r:
-            raise Exception('仓库名称重复，请创建其他仓库')
+            print('仓库名称重复，请创建其他仓库！')
         else:
             print('仓库<%s>创建成功，id为<%s>' % (warehouse_name, self.get_warehouse_id_by_name(warehouse_name)))
 
     def get_warehouse_infos(self):
         """
         查询所有仓库信息
-        :return: {仓库名称: 仓库id} - {'总仓': 691651268182017}
+        :return: -> {'总仓': 691651268182017}
         """
         url = '{}/data/grid/Warehouse.list?user_req_id=e33e804adx16cb26d70ac'.format(self.url)
         data = {
@@ -62,11 +69,12 @@ class WarehouseBusiness:
             "group": [],
             "criteriaStr": "statusEnum != 'I'"
         }
-        r = self.s.post(url, json=data).json().get('data')
-        return {i.get('name'): i.get('id') for i in r}
+        json_r = self.s.post(url, json=data).json().get('data')
+        return {i.get('name'): i.get('id') for i in json_r}
 
     def get_warehouse_id_by_name(self, warehouse_name):
         """根据仓库名称查询仓库id"""
+
         warehouse_infos = self.get_warehouse_infos()
         if warehouse_name in warehouse_infos:
             id_ = warehouse_infos.get(warehouse_name)
