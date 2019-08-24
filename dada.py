@@ -3,292 +3,54 @@
 # @Author: songxiao
 # @Time: 2019-08-22 18:28
 
-import sys
-import os
-import datetime
+import re
+from utils import get_conf_value
+from common import baseRequest
 
-curPath = os.path.abspath(os.path.dirname(__file__))
-rootPath = os.path.dirname(curPath)
-sys.path.append(rootPath)
 
-from common.login import Login
-from business.goods import Goods
+class AA:
+    @property
+    def auth_code(self):
+        url = 'https://inte-cia.chanapp.chanjet.com/internal_api/authorizeByJsonp?client_id=4cb832be-e503-4075-9903' \
+              '-6aa8d9e29104&callback=jQuery111309092522985477731_1566554809509&jsonp=true'
+        r = baseRequest.base_request('get', url)
+        print(r.cookies)
+        jq_id = r.text.split('(')[0]
+        auth_code = re.findall(':"(.+?)"', r.text)[0]
+        return jq_id, auth_code
 
-login = Login()
-front_url = login.url
-s = login.session
+    def see(self):
+        url = 'https://inte-cia.chanapp.chanjet.com/internal_api/authorizeByJsonp?client_id=4cb832be-e503-4075-9903' \
+              '-6aa8d9e29104&callback=jQuery111309092522985477731_1566554809509&jsonp=true'
+        h = {
+            'Cookie': 'CIC=512983e300e944fcabc88c2dc0210d03; 93fd6fe240b1591d_gr_cs1=61000385709; 93fd6fe240b1591d_gr_last_sent_cs1=61000385709; 93fd6fe240b1591d_gr_last_sent_sid_with_cs1=fedad6ba-1e69-4de4-84ca-4f57d8eed872; 93fd6fe240b1591d_gr_session_id=fedad6ba-1e69-4de4-84ca-4f57d8eed872; 93fd6fe240b1591d_gr_session_id_fedad6ba-1e69-4de4-84ca-4f57d8eed872=true; Hm_lpvt_338fa58da093fe8c8cfbbcb1b1ca9854=1566558169; Hm_lvt_338fa58da093fe8c8cfbbcb1b1ca9854=1566266457,1566351306,1566440208,1566524925; gr_user_id=6bec0161-0ac2-44b9-a8f7-8c3a476b0fa9; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2216be064bf2b560-0691e2c74f8e098-491b3700-1764000-16be064bf2c1342%22%2C%22%24device_id%22%3A%2216be064bf2b560-0691e2c74f8e098-491b3700-1764000-16be064bf2c1342%22%2C%22props%22%3A%7B%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%7D%7D; a67763d96181ad27_gr_cs1=60012635791; a67763d96181ad27_gr_last_sent_cs1=60012635791; cid=da49ee8ca0aa99dca62740ebf9a14946; UM_distinctid=16cb9d63c0d4cc-001e883c8545678-49183400-1aeaa0-16cb9d63c0eb1e; grwng_uid=18e0b8de-c9d5-4e53-8000-353a55ae5d64; acw_tc=7b39759815646244572514160e778b0b11716e06a77cbfb082d9624d9bfcfe; BIGDATAID=rBAmA10m+hU1exDGAwebAg=='
+        }
+        r = baseRequest.session_('get', url, headers=h)
 
-g = Goods(front_url, s)
+        return r
 
-txnToken = g.token
-url = '{}/voucher/GoodsIssue/702449487970364?user_req_id=e33e804adx16cb9a99ad2'.format(front_url)
-data = {
-    "data": {
-        "bizDate": 1566403200000,
-        "code": "SA-20190822-14961",
-        "redBlueFlagEnum": "BLUE",
-        "soldToCustId": 701354939252737,
-        "warehouseId": 701301657042944,
-        "bizEmployeeId": 691651266084867,
-        "departmentId": 691651266084866,
-        "dueDate": 1566403200000,
-        "paymentTermsEnum": "PREPAY_ALL",
-        "billToCustId": 701354939252737,
-        "noteTypeEnum": "NORMORL_INVOICE",
-        "currencyId": 100001,
-        "voucherEntrySourceEnum": "NORMAL",
-        "totalAmountWithTax": 60,
-        "promoList": [],
-        "totalPromoDiscount": 0,
-        "totalExtraDiscount": 10,
-        "totalNetAmountWithTax": 50,
-        "baseTotalAmountWithTax": 0,
-        "shipMethodEnum": "OTHER",
-        "stockOutByUserId": 61000385709,
-        "isStockOutImmediate": None,
-        "createdUserId": 61000385709,
-        "createdStamp": 1566467763000,
-        "stockOutStamp": 1566403200000,
-        "approvedDate": 1566467764000,
-        "approvedUserId": 61000385709,
-        "exchangeRate": 1,
-        "paymentList": [{
-            "amount": 10,
-            "finAccountId": 691651268706340,
-            "paymentMethodTypeId": 691651268706343,
-            "salesCollectionTypeEnum": "IMMEDIATE_PAYMENT",
-            "uuid": "2",
-            "editFlag": "new"
-        }, {
-            "amount": 40,
-            "finAccountId": 691651268706341,
-            "paymentMethodTypeId": 691651268706344,
-            "salesCollectionTypeEnum": "IMMEDIATE_PAYMENT",
-            "uuid": "3",
-            "editFlag": "new"
-        }],
-        "totalAmountWithoutTax": 0,
-        "baseTotalAmountWithoutTax": 0,
-        "srcWebsiteEnum": "DESKTOP",
-        "paymentCollectMethodEnum": "RECORD_PAYMENT_INFO",
-        "isApplyPrepayment": False,
-        "voucherStatusEnum": "EFFECTIVE",
-        "totalBalanceAmount": 0,
-        "attachmentList": [],
-        "arPaymentStatus": "RECEIPT_COMPLETED",
-        "stockOutStatus": "STOCKOUT_COMPLETED",
-        "invoiceStatus": "INVOICE_NOT_STARTED",
-        "totalTax": 0,
-        "totalDiscount": 0,
-        "totalNetTax": 0,
-        "bizTypeId": 100011,
-        "txnToken": txnToken,
-        "currentArapBalanceAmount": 0,
-        "isCustChargedFee": None,
-        "voucherTypeEnum": "GoodsIssue-BLUE",
-        "vFullAddress": "",
-        "goodsItems": [{
-            "warehouseId": 701301657042944,
-            "itemBarcode": "",
-            "productId": 701398425796608,
-            "transUomId": 691651265954015,
-            "transQty": 1,
-            "hierarchyPkgQtysText": "1个",
-            "baseUomId": 691651265954015,
-            "baseQty": 1,
-            "listPrice": 0,
-            "netDiscountPct": 1,
-            "netPriceWithoutTax": 8.33,
-            "netPriceWithTax": 8.33,
-            "taxPct": 0,
-            "netAmountWithoutTax": 8.33,
-            "netTax": 0,
-            "netAmountWithTax": 8.33,
-            "netDiscount": 1.67,
-            "priceWithoutTax": 10,
-            "priceWithTax": 10,
-            "amountWithoutTax": 10,
-            "amountWithTax": 10,
-            "isFreeGift": False,
-            "costPrice": 1.34,
-            "costAmount": 1.34,
-            "promoDiscount": 0,
-            "extraDiscount": 1.67,
-            "vGrossMargin": 8.66,
-            "vGrossMarginPct": 0.866,
-            "trans2ToTransRate": None,
-            "trans2ToBaseRate": None,
-            "transToBaseRate": 1,
-            "tax": 0,
-            "masterVoucherId": 702449487970364,
-            "createdUserId": 61000385709,
-            "createdStamp": 1566467763000,
-            "lastUpdatedUserId": 61000385709,
-            "lastUpdatedStamp": 1566467763000,
-            "availQtyErrorMsgs": [],
-            "commonErrorMsgs": [],
-            "priceErrorMsgs": [],
-            "vCostAmount": 1.34,
-            "vCostPrice": 1.34,
-            "sequenceNum": 0,
-            "trans2ToAuxRate": None,
-            "auxToBaseRate": None,
-            "isTransToBaseFloating": False,
-            "manualInputFlag": 536870945,
-            "hierarchyPkgQtys": {},
-            "basePriceWithoutTax": 0,
-            "baseAmountWithoutTax": 0,
-            "baseTax": 0,
-            "basePriceWithTax": 0,
-            "baseAmountWithTax": 0,
-            "baseDiscount": 0,
-            "isListPriceIncludingTax": False,
-            "transToAuxRate": None,
-            "netManualInputFlag": 536871425,
-            "discountPct": 1,
-            "discount": 0,
-            "netStdPriceFlagEnum": "PRICE_WITHOUT_TAX",
-            "refNetDiscount": 0,
-            "id": 702449487970365,
-            "uuid": "1",
-            "editFlag": "update"
-        }, {
-            "warehouseId": 701301657042944,
-            "itemBarcode": "",
-            "productId": 701398425796609,
-            "transUomId": 691651265954015,
-            "transQty": 1,
-            "hierarchyPkgQtysText": "1个",
-            "baseUomId": 691651265954015,
-            "baseQty": 1,
-            "listPrice": 0,
-            "netDiscountPct": 1,
-            "netPriceWithoutTax": 16.67,
-            "netPriceWithTax": 16.67,
-            "taxPct": 0,
-            "netAmountWithoutTax": 16.67,
-            "netTax": 0,
-            "netAmountWithTax": 16.67,
-            "netDiscount": 3.33,
-            "priceWithoutTax": 20,
-            "priceWithTax": 20,
-            "amountWithoutTax": 20,
-            "amountWithTax": 20,
-            "isFreeGift": False,
-            "costPrice": 0,
-            "costAmount": 0,
-            "promoDiscount": 0,
-            "extraDiscount": 3.33,
-            "vGrossMargin": 20,
-            "vGrossMarginPct": 1,
-            "trans2ToTransRate": None,
-            "trans2ToBaseRate": None,
-            "transToBaseRate": 1,
-            "tax": 0,
-            "masterVoucherId": 702449487970364,
-            "createdUserId": 61000385709,
-            "createdStamp": 1566467763000,
-            "lastUpdatedUserId": 61000385709,
-            "lastUpdatedStamp": 1566467763000,
-            "availQtyErrorMsgs": [],
-            "commonErrorMsgs": [],
-            "priceErrorMsgs": [],
-            "vCostAmount": 0,
-            "vCostPrice": 0,
-            "sequenceNum": 1,
-            "trans2ToAuxRate": None,
-            "auxToBaseRate": None,
-            "isTransToBaseFloating": False,
-            "manualInputFlag": 536870945,
-            "hierarchyPkgQtys": {},
-            "basePriceWithoutTax": 0,
-            "baseAmountWithoutTax": 0,
-            "baseTax": 0,
-            "basePriceWithTax": 0,
-            "baseAmountWithTax": 0,
-            "baseDiscount": 0,
-            "isListPriceIncludingTax": False,
-            "transToAuxRate": None,
-            "netManualInputFlag": 536871425,
-            "discountPct": 1,
-            "discount": 0,
-            "netStdPriceFlagEnum": "PRICE_WITHOUT_TAX",
-            "refNetDiscount": 0,
-            "id": 702449487970366,
-            "uuid": "2",
-            "editFlag": "update"
-        }, {
-            "warehouseId": 701301657042944,
-            "itemBarcode": "",
-            "productId": 701398425796610,
-            "transUomId": 691651265954015,
-            "transQty": 1,
-            "hierarchyPkgQtysText": "1个",
-            "baseUomId": 691651265954015,
-            "baseQty": 1,
-            "listPrice": 0,
-            "netDiscountPct": 1,
-            "netPriceWithoutTax": 25,
-            "netPriceWithTax": 25,
-            "taxPct": 0,
-            "netAmountWithoutTax": 25,
-            "netTax": 0,
-            "netAmountWithTax": 25,
-            "netDiscount": 5,
-            "priceWithoutTax": 30,
-            "priceWithTax": 30,
-            "amountWithoutTax": 30,
-            "amountWithTax": 30,
-            "isFreeGift": False,
-            "costPrice": 0,
-            "costAmount": 0,
-            "promoDiscount": 0,
-            "extraDiscount": 5,
-            "vGrossMargin": 30,
-            "vGrossMarginPct": 1,
-            "trans2ToTransRate": None,
-            "trans2ToBaseRate": None,
-            "transToBaseRate": 1,
-            "tax": 0,
-            "masterVoucherId": 702449487970364,
-            "createdUserId": 61000385709,
-            "createdStamp": 1566467763000,
-            "lastUpdatedUserId": 61000385709,
-            "lastUpdatedStamp": 1566467763000,
-            "availQtyErrorMsgs": [],
-            "commonErrorMsgs": [],
-            "priceErrorMsgs": [],
-            "vCostAmount": 0,
-            "vCostPrice": 0,
-            "sequenceNum": 2,
-            "trans2ToAuxRate": None,
-            "auxToBaseRate": None,
-            "isTransToBaseFloating": False,
-            "manualInputFlag": 536870945,
-            "hierarchyPkgQtys": {},
-            "basePriceWithoutTax": 0,
-            "baseAmountWithoutTax": 0,
-            "baseTax": 0,
-            "basePriceWithTax": 0,
-            "baseAmountWithTax": 0,
-            "baseDiscount": 0,
-            "isListPriceIncludingTax": False,
-            "transToAuxRate": None,
-            "netManualInputFlag": 536871425,
-            "discountPct": 1,
-            "discount": 0,
-            "netStdPriceFlagEnum": "PRICE_WITHOUT_TAX",
-            "refNetDiscount": 0,
-            "id": 702449487970367,
-            "uuid": "3",
-            "editFlag": "update"
-        }],
-        "id": 702449487970364
-    },
-    "params": {
-        "ignoreWarn": True
-    }
-}
+    def bb(self):
+        account = get_conf_value.get_account_info()
+        un = account.get('username')
+        md5_pd = account.get('password')
+        url = 'https://inte-passport.chanjet.com/loginV2/webLogin?callback={}&auth_username={}&password={}&auth_code={}&jsonp=1&_=1566554809513'.format(
+            self.auth_code[0], un, md5_pd, self.auth_code[1])
+        r = baseRequest.base_request('get', url)
+        print(r.text)
 
-r = s.put(url, json=data)
-print(r.text)
+    def cc(self):
+        url = 'https://inte-cia.chanapp.chanjet.com/internal_api/authorizeByJsonp?client_id=93402bb6-4d77-48b9-98e9-88d3c1e246a1&callback=jQuery111309092522985477731_1566554809509&jsonp=true'
+        # h = {
+        #     'Cookie': 'CIC=512983e300e944fcabc88c2dc0210d03; 93fd6fe240b1591d_gr_cs1=61000385709; 93fd6fe240b1591d_gr_last_sent_cs1=61000385709; 93fd6fe240b1591d_gr_last_sent_sid_with_cs1=fedad6ba-1e69-4de4-84ca-4f57d8eed872; 93fd6fe240b1591d_gr_session_id=fedad6ba-1e69-4de4-84ca-4f57d8eed872; 93fd6fe240b1591d_gr_session_id_fedad6ba-1e69-4de4-84ca-4f57d8eed872=true; Hm_lpvt_338fa58da093fe8c8cfbbcb1b1ca9854=1566558169; Hm_lvt_338fa58da093fe8c8cfbbcb1b1ca9854=1566266457,1566351306,1566440208,1566524925; gr_user_id=6bec0161-0ac2-44b9-a8f7-8c3a476b0fa9; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2216be064bf2b560-0691e2c74f8e098-491b3700-1764000-16be064bf2c1342%22%2C%22%24device_id%22%3A%2216be064bf2b560-0691e2c74f8e098-491b3700-1764000-16be064bf2c1342%22%2C%22props%22%3A%7B%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%7D%7D; a67763d96181ad27_gr_cs1=60012635791; a67763d96181ad27_gr_last_sent_cs1=60012635791; cid=da49ee8ca0aa99dca62740ebf9a14946; UM_distinctid=16cb9d63c0d4cc-001e883c8545678-49183400-1aeaa0-16cb9d63c0eb1e; grwng_uid=18e0b8de-c9d5-4e53-8000-353a55ae5d64; acw_tc=7b39759815646244572514160e778b0b11716e06a77cbfb082d9624d9bfcfe; BIGDATAID=rBAmA10m+hU1exDGAwebAg=='
+        # }
+        # r = baseRequest.base_request('get', url, headers=h)
+        # print(r.text)
+        r = self.see().get(url)
+        print(r.text)
+
+
+a = AA()
+# print(a.auth_code)
+# print(a.cc())
+a.see().
+a.cc()

@@ -12,10 +12,10 @@ class WarehouseBusiness:
         self.s = session
 
     @property
-    def warehouse_token(self):
+    def token(self):
         """获取仓库token"""
         url = '{}/entities/Warehouse/blank?user_req_id=e33e804adx16cb238be2d'.format(self.url)
-        # json_r = self.s.get(url).json()
+        json_r = self.s.get(url).json()
         json_r = self.s.get(url)
         print(json_r.status_code)
         token = json_r.get('txnToken')
@@ -47,7 +47,7 @@ class WarehouseBusiness:
             "warehouseCategoryId": warehouse_category_id,
             "comments": "备注是没有备注",
             "statusEnum": "A",
-            "txnToken": self.warehouse_token
+            "txnToken": self.token
         }
         text_r = self.s.post(url, json=data).text
         if '仓库名称重复' in text_r:

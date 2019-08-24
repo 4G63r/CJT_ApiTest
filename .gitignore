@@ -10,4 +10,5 @@
 __pycache__/
 *.pyc
 
+# Mac
 .DS_Store

@@ -31,16 +31,19 @@ def run_test():
         "isMultiSpecEnabled": False,
         "statusEnum": "A",
         "createdUserId": 61000385709,
-        "createdStamp": 1566540651670,
-        "lastUpdatedStamp": 1566540651670,
-        "name": "于老师的大头像",
+        "createdStamp": 1566545150837,
+        "lastUpdatedStamp": 1566545150838,
+        "parentId": 703490074869770,
+        "name": "测试图片",
         "valuationMethodEnum": "MOVING_AVG",
-        "baseUomId": 703245127516405,
-        "salesUomId": 703245127516405,
-        "purchaseUomId": 703245127516405,
-        "inventoryUomId": 703245127516405,
+        "baseUomId": 703485511467010,
+        "salesUomId": 703485511467010,
+        "purchaseUomId": 703485511467010,
+        "inventoryUomId": 703485511467010,
         "isPurchasable": True,
+        "isMadeBySelf": False,
         "isSalable": True,
+        "isConsumedByProd": False,
         "isMultiUomEnabled": False,
         "productUomGroup": [],
         "lotCtrlEnabled": False,
@@ -49,7 +52,6 @@ def run_test():
         "priceBaseComp": [{
             "retailPrice": None,
             "stdWholesalePrice": None,
-            "uomId": 703245127516405,
             "refCostPrice": None,
             "maxPurchasePrice": None,
             "stdPurchasePrice": None,
@@ -64,7 +66,6 @@ def run_test():
             "level9Price": None,
             "level10Price": None,
             "minSalePrice": None,
-            "isBaseUom": True,
             "editFlag": "new",
             "sequenceNum": 0
         }],
@@ -72,16 +73,17 @@ def run_test():
         "primaryImageList": [{
             "sequenceNum": 0,
             "image": {
-                "url": "https://inte-cloudsto.static.chanjet.com/90001115158/2019/7/23/hsy-1566540846377-hsq.jpeg",
+                "url": "https://inte-cloudsto.static.chanjet.com/90001115158/2019/7/23/hsy-1566544733886-hsq.jpeg",
                 "size": 19318
             }
         }],
         "txnToken": get_token()
     }
+
     r = requests.post(url, headers=headers, verify=False, json=data)
     return r.status_code
 
 
-for i in range(2000):
+for i in range(1):
     run_test()
-    print('于老师第%s张头像创建成功' % (i + 1))
+    print('成功添加第%s个商品图片' % (i + 1))
