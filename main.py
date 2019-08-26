@@ -18,4 +18,5 @@ s = login.session
 # g = Goods(front_url, s)
 
 j = JhdReceipt(front_url, s, assertion)
-j.create_jhd()
+for i in range(10):
+    j.create_jhd()
