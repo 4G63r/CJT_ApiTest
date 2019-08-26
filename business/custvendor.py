@@ -2,6 +2,7 @@
 
 # @Author: songxiao
 # @Time: 2019-08-21 18:12
+from common import assertion
 
 
 class CustVendor:
@@ -12,11 +13,12 @@ class CustVendor:
         self.s = session
 
     @property
-    def vendor_token(self):
+    def token(self):
         url = '{}/entities/CustVendor/blank?options%5BprimaryPartyCategoryCode%5D=00&user_req_id=e33e804adx16cb3a9ea10'.format(
             self.url)
-        json_r = self.s.get(url).json()
-        return json_r.get('txnToken')
+        r = self.s.get(url)
+        if assertion.assert_status_code(r, 200):
+            return r.json().get('txnToken')
 
     def create_cust_vendor(self, vendor_name):
         """创建往来单位"""
@@ -93,7 +95,7 @@ class CustVendor:
             "fixedDays": None,
             "mshopFirstBizDate": "",
             "lastBizDate": "",
-            "txnToken": self.vendor_token
+            "txnToken": self.token
         }
         r = self.s.post(url, json=data)
         if r.json().get('partyName') == vendor_name:

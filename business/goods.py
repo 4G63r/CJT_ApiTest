@@ -3,6 +3,8 @@
 # @Author: songxiao
 # @Time: 2019-08-21 19:22
 
+from common import assertion
+
 
 class Goods:
     """商品相关操作"""
@@ -14,8 +16,9 @@ class Goods:
     @property
     def token(self):
         url = '{}/entities/Product/blank?user_req_id=e33e804adx16cb3e8e3f7'.format(self.url)
-        json_r = self.s.get(url).json()
-        return json_r.get('txnToken')
+        r = self.s.get(url)
+        if assertion.assert_status_code(r, 200):
+            return r.json().get('txnToken')
 
     def get_measure_infos(self):
         """
@@ -67,14 +70,14 @@ class Goods:
             "isMultiSpecEnabled": False,
             "statusEnum": "A",
             "createdUserId": 61000385709,
-            "createdStamp": 1566387245840,
-            "lastUpdatedStamp": 1566387245840,
+            "createdStamp": 1566803266929,
+            "lastUpdatedStamp": 1566803266929,
             "name": goods_name,
             "valuationMethodEnum": "MOVING_AVG",
-            "baseUomId": 691651265954015,
-            "salesUomId": 691651265954015,
-            "purchaseUomId": 691651265954015,
-            "inventoryUomId": 691651265954015,
+            "baseUomId": 703752336310496,
+            "salesUomId": 703752336310496,
+            "purchaseUomId": 703752336310496,
+            "inventoryUomId": 703752336310496,
             "isPurchasable": True,
             "isSalable": True,
             "isMultiUomEnabled": False,
@@ -85,7 +88,7 @@ class Goods:
             "priceBaseComp": [{
                 "retailPrice": None,
                 "stdWholesalePrice": None,
-                "uomId": 691651265954015,
+                "uomId": 703752336310496,
                 "refCostPrice": None,
                 "maxPurchasePrice": None,
                 "stdPurchasePrice": None,
@@ -154,8 +157,3 @@ class Goods:
         r = self.s.put(url, json=data)
         print(r.status_code)
         return r.text
-
-
-if __name__ == '__main__':
-    p = Goods()
-    print(p.get_goods_infos())

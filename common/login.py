@@ -208,7 +208,3 @@ class Login:
         return baseRequest.session_('post', url, data=data, headers=self.__headers)
 
     # --------------- WEB ---------------
-
-    def aa(self):
-        url = 'https://inte-cia.chanapp.chanjet.com/internal_api/authorizeByJsonp?client_id=4cb832be-e503-4075-9903-6aa8d9e29104&callback=jQuery111309092522985477731_1566554809509&jsonp=true&_=1566554809511'
-
