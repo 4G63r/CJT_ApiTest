@@ -2,25 +2,25 @@
 
 # @Author: songxiao
 # @Time: 2019-08-21 18:12
-from common import assertion
 
 
 class CustVendor:
-    """往来客户业务操作"""
+    """往来客户业务"""
 
-    def __init__(self, url, session):
+    def __init__(self, url, session, assertion):
         self.url = url
         self.s = session
+        self.assert_ = assertion
 
     @property
     def token(self):
         url = '{}/entities/CustVendor/blank?options%5BprimaryPartyCategoryCode%5D=00&user_req_id=e33e804adx16cb3a9ea10'.format(
             self.url)
         r = self.s.get(url)
-        if assertion.assert_status_code(r, 200):
+        if self.assert_.assert_status_code(r, 200):
             return r.json().get('txnToken')
 
-    def create_cust_vendor(self, vendor_name):
+    def create_vendor(self, vendor_name):
         """创建往来单位"""
         url = '{}/entity/CustVendor?user_req_id=e33e804adx16cb3b5281c'.format(self.url)
         data = {
@@ -100,10 +100,10 @@ class CustVendor:
         r = self.s.post(url, json=data)
         if r.json().get('partyName') == vendor_name:
             print('往来单位<%s>创建成功，id为<%s>' % (vendor_name, r.json().get('id')))
-        elif r.status_code != 200:
+        elif not self.assert_.assert_status_code(r, 200):
             print('往来单位<%s>创建失败！' % vendor_name)
 
-    def get_party_infos(self):
+    def get_vendor_infos(self):
         """
         查询所有往来单位信息
         :return: {'宋宵测试单位1': 701354939252737}
@@ -122,23 +122,23 @@ class CustVendor:
         json_r = self.s.post(url, json=data).json().get('data')
         return {i.get('partyName'): i.get('id') for i in json_r}
 
-    def get_party_id_by_name(self, vendor_name):
+    def get_vendor_id_by_name(self, vendor_name):
         """
         通过单位名称查询往来单位id
         :return:
         """
-        parties = self.get_party_infos()
-        if vendor_name in parties:
-            id_ = parties.get(vendor_name)
+        vendors = self.get_vendor_infos()
+        if vendor_name in vendors:
+            return vendors.get(vendor_name)
         else:
             print('往来单位<%s>名称不存在' % vendor_name)
             id_ = None
         return id_
 
-    def delete_cust_vendor(self, vendor_name):
+    def delete_vendor(self, vendor_name):
         """删除往来单位"""
 
-        id_ = self.get_party_id_by_name(vendor_name)
+        id_ = self.get_vendor_id_by_name(vendor_name)
         if id_:
             url = '{}/entity/CustVendor/{}?user_req_id=e33e804adx16cb3c77f60'.format(self.url, id_)
             r = self.s.delete(url)

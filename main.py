@@ -6,7 +6,7 @@
 from common.login import Login
 from common import assertion
 # from business.warehouse import WarehouseBusiness
-# from business.custvendor import CustVendor
+from business.custVendor import CustVendor
 # from business.goods import Goods
 from business.jhdReceipt import JhdReceipt
 
@@ -14,9 +14,13 @@ login = Login()
 front_url = login.url
 s = login.session
 
-# c = CustVendor(front_url, s)
+c = CustVendor(front_url, s, assertion)
 # g = Goods(front_url, s)
 
-j = JhdReceipt(front_url, s, assertion)
-for i in range(10):
-    j.create_jhd()
+# j = JhdReceipt(front_url, s, assertion)
+# for i in range(10):
+#     j.create_jhd()
+
+# c.create_vendor('测试111')
+print(c.get_vendor_infos())
+c.delete_vendor()

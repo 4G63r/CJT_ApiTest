@@ -73,7 +73,6 @@ def create_goods(i):
     print('创建第%s个商品<%s>创建成功,id<%s>' % (i, r.get('name'), r.get('id')))
 
 
-
 for i in range(5000):
     create_goods(i + 1)
     sleep(0.5)
