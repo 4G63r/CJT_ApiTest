@@ -56,10 +56,75 @@ def get_goods_ids(page_size):
     """
     url = '{}/data/referProduct/InventoryQtyDm.referWithoutWarehouse?pageSize={}&take={}&skip=0&page=1&filter' \
           '=&aggregate=&loadMore=&productTypes=&custId=&warehouse=706994636193798&criteriaStr=productTypeId+%3C%3E' \
-          '+100002+AND+statusEnum+%3D+%27A%27+AND+statusEnum+%3D+%27A%27&fields=&recordDuration=true&user_req_id' \
+          '+100002+AND+statusEnum+%3D+%27A%27+AND+statusEnum+%3D+%27A%27&fields=&recordDuration=None&user_req_id' \
           '=e33e804adx16cf28f28e0'.format(front_url, page_size, page_size, )
     json_data = s.get(url).json().get('data')
     return (i.get('id') for i in json_data)
+
+
+def update_goods_name(product_id, n):
+    url = '{}/entity/Product/{}?user_req_id=e33e804adx16cf55763c9'.format(front_url, product_id)
+    data = {
+        "id": product_id,
+        "productTypeId": 100001,
+        # "code": "0000007",
+        "taxRate": 0,
+        "isMultiSpecEnabled": False,
+        "statusEnum": "A",
+        "createdUserId": 61000385709,
+        "createdStamp": 1566806823000,
+        "lastUpdatedUserId": 61000385709,
+        "lastUpdatedStamp": 1566807360000,
+        "parentId": 706994633965779,
+        "name": "性能测试UI%s" % n,
+        "valuationMethodEnum": "MOVING_AVG",
+        "createdUserName": "15899991005",
+        "updatedUserName": "15899991005",
+        "baseUomId": 706994633965796,
+        "salesUomId": 706994633965796,
+        "purchaseUomId": 706994633965796,
+        "inventoryUomId": 706994633965796,
+        "isPurchasable": None,
+        "isMadeBySelf": False,
+        "isSalable": None,
+        "isConsumedByProd": False,
+        "isMultiUomEnabled": False,
+        "productUomGroup": [],
+        "lotCtrlEnabled": False,
+        "lotExpCtrlEnabled": False,
+        "shelfLifeUomEnum": "DAY",
+        "priceBaseComp": [{
+            "id": 707007521226757,
+            "retailPrice": None,
+            "stdWholesalePrice": None,
+            "uomId": 706994633965796,
+            "refCostPrice": None,
+            "maxPurchasePrice": None,
+            "stdPurchasePrice": None,
+            "level1Price": None,
+            "level2Price": None,
+            "level3Price": None,
+            "level4Price": None,
+            "level5Price": None,
+            "level6Price": None,
+            "level7Price": None,
+            "level8Price": None,
+            "level9Price": None,
+            "level10Price": None,
+            "minSalePrice": None,
+            "editFlag": "update",
+            "sequenceNum": 0
+        }],
+        "primaryImageList": [],
+        "detailImageList": [],
+        "productLabelList": [{
+            "id": 707776183795739,
+            "label": "新品"
+        }]
+    }
+    json_r = s.put(url, json=data).json()
+    if json_r.get('id') == product_id:
+        print('OK')
 
 
 def delete_goods(goods_ids):
@@ -125,11 +190,12 @@ def add_price(pdd_id):
     s.put(url, json=data)
 
 
-ids = get_goods_ids(8500)
+ids = get_goods_ids(3000)
 n = 1
 for i in ids:
     print(n)
-    pdd_id = add_goods_to_pdd(i)
-    add_price(pdd_id)
+    # pdd_id = add_goods_to_pdd(i)
+    # add_price(pdd_id)
+    update_goods_name(i, n)
     n += 1
     sleep(0.3)
