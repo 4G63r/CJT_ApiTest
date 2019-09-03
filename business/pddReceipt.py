@@ -125,7 +125,7 @@ def add_price(pdd_id):
     s.put(url, json=data)
 
 
-ids = get_goods_ids(1)
+ids = get_goods_ids(8500)
 n = 1
 for i in ids:
     print(n)
