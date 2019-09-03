@@ -6,7 +6,7 @@
 import os
 import configparser
 
-cur_path = os.path.dirname(__file__)
+cur_path = os.path.abspath(os.path.dirname(__file__))
 conf_path = '%s/config.ini' % cur_path.replace('utils', 'conf')
 
 

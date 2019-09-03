@@ -206,5 +206,3 @@ class Login:
                 "group": []
             }
         return baseRequest.session_('post', url, data=data, headers=self.__headers)
-
-    # --------------- WEB ---------------

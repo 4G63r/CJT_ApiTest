@@ -10,10 +10,18 @@ r = ReadConfUtil()
 
 
 def get_test_host():
+    """
+    test环境host
+    :return: https://test-cloud.chanjet.com/app_name/0000/0
+    """
     return r.get_conf_value('test_host', 'addr')
 
 
 def get_inte_host():
+    """
+    inte环境host
+    :return: https://inte-cloud.chanjet.com/app_name/0000/0
+    """
     return r.get_conf_value('inte_host', 'addr')
 
 
