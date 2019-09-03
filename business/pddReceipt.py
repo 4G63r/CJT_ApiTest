@@ -127,6 +127,47 @@ def update_goods_name(product_id, n):
         print('OK')
 
 
+def get_goods_by_page_id(page_id):
+    url = '{}/data/grid/Product.list?user_req_id=e33e804adx16cf5c4118e'.format(front_url)
+    data = {
+        "pageSize": 100,
+        "take": 100,
+        "skip": 3000,
+        "page": page_id,
+        "sort": [{
+            "field": "name",
+            "dir": "desc"
+        }, {
+            "dir": "asc",
+            "field": "createdStamp"
+        }],
+        "bindVars": {},
+        "group": [],
+        "criteriaStr": "statusEnum != 'I'"
+    }
+    json_data = s.post(url, json=data).json().get('data')
+    return (i.get('id') for i in json_data)
+
+
+n = 3001
+for i in range(31, 100):
+    ids = get_goods_by_page_id(i)
+    for j in list(ids):
+        update_goods_name(j, n)
+        n += 1
+
+
+def get_goods_by_page(page):
+    """
+    根据页码返回商品ids
+    :return: [716088021876753, 716088021876754]
+    """
+    url = '{}/data/grid/StockCountDetail.list?extendProduct=true&pageSize=50&take=50&skip=6050&page={}&sort%5B0%5D%5Bfield%5D=id&sort%5B0%5D%5Bdir%5D=asc&filter=&aggregate=&loadMore=&criteriaStr' \
+          '=masterVoucherId%3D715982124089344&user_req_id=e33e804adx16cf5b2eaa6'.format(front_url, page)
+    json_data = s.get(url).json().get('data')
+    return (i.get('id') for i in json_data)
+
+
 def delete_goods(goods_ids):
     """
     从盘点单中删除商品
@@ -135,8 +176,7 @@ def delete_goods(goods_ids):
     """
     l = len(goods_ids)
     url = '{}/stockCount/batchRomveDetail?user_req_id=e33e804adx16cf2bac281'.format(front_url)
-    data = goods_ids
-    json_r = s.post(url, json=data).json()
+    json_r = s.post(url, json=goods_ids).json()
     if l == json_r.get('successCount'):
         print('成功从盘点单中删除%s件商品' % l)
 
@@ -189,13 +229,12 @@ def add_price(pdd_id):
     }]
     s.put(url, json=data)
 
-
-ids = get_goods_ids(3000)
-n = 1
-for i in ids:
-    print(n)
-    # pdd_id = add_goods_to_pdd(i)
-    # add_price(pdd_id)
-    update_goods_name(i, n)
-    n += 1
-    sleep(0.3)
+# ids = get_goods_ids(3000)
+# n = 1
+# for i in ids:
+#     print(n)
+#     # pdd_id = add_goods_to_pdd(i)
+#     # add_price(pdd_id)
+#     update_goods_name(i, n)
+#     n += 1
+#     sleep(0.3)
