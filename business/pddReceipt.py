@@ -2,6 +2,12 @@
 
 # @Author: songxiao
 # @Time: 2019-09-02 16:44
+import sys
+import os
+
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.dirname(curPath)
+sys.path.append(rootPath)
 
 from time import sleep
 from common.login import Login
@@ -119,7 +125,7 @@ def add_price(pdd_id):
     s.put(url, json=data)
 
 
-ids = get_goods_ids(8500)
+ids = get_goods_ids(1)
 n = 1
 for i in ids:
     print(n)
