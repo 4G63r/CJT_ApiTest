@@ -149,14 +149,6 @@ def get_goods_by_page_id(page_id):
     return (i.get('id') for i in json_data)
 
 
-n = 1
-for i in range(1, 100):
-    ids = get_goods_by_page_id(i)
-    for j in list(ids):
-        update_goods_name(j, n)
-        n += 1
-
-
 def get_goods_by_page(page):
     """
     根据页码返回商品ids
@@ -229,12 +221,13 @@ def add_price(pdd_id):
     }]
     s.put(url, json=data)
 
-# ids = get_goods_ids(3000)
-# n = 1
-# for i in ids:
-#     print(n)
-#     # pdd_id = add_goods_to_pdd(i)
-#     # add_price(pdd_id)
-#     update_goods_name(i, n)
-#     n += 1
-#     sleep(0.3)
+
+ids = get_goods_ids(8200)
+n = 1
+for i in ids:
+    print(n)
+    pdd_id = add_goods_to_pdd(i)
+    add_price(pdd_id)
+    # update_goods_name(i, n)
+    n += 1
+    sleep(0.3)
