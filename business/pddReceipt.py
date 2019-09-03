@@ -76,7 +76,7 @@ def update_goods_name(product_id, n):
         "lastUpdatedUserId": 61000385709,
         "lastUpdatedStamp": 1566807360000,
         "parentId": 706994633965779,
-        "name": "性能测试UI%s" % n,
+        "name": "%s性能测试UI" % n,
         "valuationMethodEnum": "MOVING_AVG",
         "createdUserName": "15899991005",
         "updatedUserName": "15899991005",
@@ -124,7 +124,7 @@ def update_goods_name(product_id, n):
     }
     json_r = s.put(url, json=data).json()
     if json_r.get('id') == product_id:
-        print('OK')
+        print('%sOK' % n)
 
 
 def get_goods_by_page_id(page_id):
@@ -149,8 +149,8 @@ def get_goods_by_page_id(page_id):
     return (i.get('id') for i in json_data)
 
 
-n = 3001
-for i in range(31, 100):
+n = 1
+for i in range(1, 100):
     ids = get_goods_by_page_id(i)
     for j in list(ids):
         update_goods_name(j, n)
