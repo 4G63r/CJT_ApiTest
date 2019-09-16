@@ -35,7 +35,7 @@ def create_blank_pdd():
             "departmentId": 706994634096642,
             "bizEmployeeId": 706994634096643,
             "projectId": None,
-            "bizDate": 1567475432567,
+            "bizDate": 1568600817225,
             "comments": "",
             "warehouseId": 706994636193798,
             "stockCountMethodEnum": "PHYSICAL_COUNT",
@@ -181,7 +181,7 @@ def add_goods_to_pdd(product_id):
     """
     url = '{}/stockCount/stockCountDetail?user_req_id=e33e804adx16cf4dafacb'.format(front_url)
     data = {
-        "masterVoucherId": 715982124089344,
+        "masterVoucherId": 731081618489344,
         "warehouseId": 706994636193798,
         "transQty": 1,
         "transUomId": 706994633965796,
@@ -221,6 +221,8 @@ def add_price(pdd_id):
     }]
     s.put(url, json=data)
 
+
+# print(create_blank_pdd())
 
 ids = get_goods_ids(8200)
 n = 1

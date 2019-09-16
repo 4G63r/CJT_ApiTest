@@ -42,24 +42,29 @@ def get_host_addr():
 
 def get_account_info():
     """
-    获取用户账密
-    如果平台是WEB端，密码需要MD5加密处理
+    获取用户账号密码
+
     :return:
+        如果平台是APP端，返回正常的账号和密码
+        如果平台是WEB端，返回MD5加密后的密码
     """
     platform_name = get_platform()
-    un = r.get_conf_value('account', 'username')
-    pw = r.get_conf_value('account', 'password')
+    username = r.get_conf_value('account', 'username')
+    password = r.get_conf_value('account', 'password')
 
     if platform_name == 'APP':
-        return {'username': un, 'password': pw}
+        return {'username': username, 'password': password}
     elif platform_name == 'WEB':
-        return {'username': un, 'password': md5_encode(pw)}
+        return {'username': username, 'password': md5_encode(password)}
     else:
         return
 
 
 def get_platform():
-    """获取平台名称 - web/app"""
+    """
+    获取平台名称
+    :return: WEB / APP
+    """
     return r.get_conf_value('platform', 'name').upper()
 
 

@@ -26,7 +26,7 @@ class Login:
         self.session = self.session_by_login()
 
     def login_1(self):
-        url = '{}/mobile/cia/graphql?user_req_id=1566209016114_0'.format(self.host_addr)
+        url = '{}/mobile/cia/graphql?user_req_id=1567682970442_0'.format(self.host_addr)
         data = {
             "query": "\n    fragment OrgType on Org {\n        id\n        name\n        account\n        isInitial\n "
                      "   }\n\n    fragment AppSubscribeType on AppSubscription {\n        status\n        startDate\n "
