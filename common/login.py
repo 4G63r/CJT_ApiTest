@@ -19,14 +19,14 @@ class Login:
 
         self.platform = get_conf_value.get_platform()
         self.host_addr = get_conf_value.get_host_addr()
-        self.access_token = self.__access_token
-        self.domain_org = self.__domain_and_orgaccount
-        self.url = self.url_with_domain_and_orgaccount
-        self.auth = self.__auth
-        self.session = self.session_by_login()
+        self.access_token_ = self.access_token
+        self.do = self.domain_and_orgaccount
+        self.url = self.splice_domain_and_orgaccount()
+        self.auth_ = self.auth
+        self.session_ = self.session
 
     def login_1(self):
-        url = '{}/mobile/cia/graphql?user_req_id=1567682970442_0'.format(self.host_addr)
+        url = '{}/mobile/cia/graphql?user_req_id=1568705092426_198'.format(self.host_addr)
         data = {
             "query": "\n    fragment OrgType on Org {\n        id\n        name\n        account\n        isInitial\n "
                      "   }\n\n    fragment AppSubscribeType on AppSubscription {\n        status\n        startDate\n "
@@ -74,104 +74,70 @@ class Login:
         return json_r
 
     @property
-    def __access_token(self):
-        if self.platform == 'APP':
-            r = self.login_1()
-            access_token = r.get('data').get('createToken').get('accessToken')
-            return access_token
-        else:
-            return
+    def access_token(self):
+        """通过login_1获取accesstoken"""
+        r = self.login_1()
+        access_token = r.get('data').get('createToken').get('accessToken')
+        return access_token
 
     def login_2(self):
         url = '{}/mobile/cia/graphql?user_req_id=1566209018073_1'.format(self.host_addr)
-        data = {
-            "query": "\n            query findAccountBooks {\n                accountBooks: findAccountBooks {\n      "
-                     "              isDefault\n                    tenant{\n                        id\n              "
-                     "          name\n                        code\n                        domainName\n              "
-                     "          createdStamp\n                        isHidden\n                        disabled\n    "
-                     "                    enterpriseId\n                        org{\n                            "
-                     "orgId\n                            orgName\n                            orgFullName\n           "
-                     "                 orgAccount\n                        }\n                        tenantHkj{\n    "
-                     "                        acctgSystemId\n                            taxpayerTypeEnum\n           "
-                     "             }\n                    }\n                }\n            }\n        ",
-            "variables": {}
-        }
-        headers = {
-            'accesstoken': self.access_token
-        }
-        json_r = baseRequest.base_request('post', url, data=data, headers=headers).json()
-        return json_r
-
-    def login_3(self):
-        url = '{}/mobile/cia/graphql?user_req_id=1566209018662_2'.format(self.host_addr)
         data = {
             "query": "\n            query getDefaultAccountBook {\n                accountBook: getDefaultAccountBook "
                      "{\n                    isDefault\n                    tenant{\n                        id\n     "
                      "                   name\n                        code\n                        domainName\n     "
                      "                   createdStamp\n                        isHidden\n                        "
-                     "disabled\n                        enterpriseId\n                        tenantHkj{\n            "
-                     "                acctgSystemId\n                            taxpayerTypeEnum\n                   "
-                     "     }\n                        org{\n                            orgId\n                       "
-                     "     orgName\n                            orgFullName\n                            orgAccount\n "
-                     "                       }\n                    }\n                }\n            }\n        ",
+                     "disabled\n                        enterpriseId\n                        org{\n                  "
+                     "          orgId\n                            orgName\n                            orgFullName\n "
+                     "                           orgAccount\n                        }\n                    }\n       "
+                     "         }\n            }\n        ",
             "variables": {}
         }
         headers = {
-            'accesstoken': self.access_token
+            'accesstoken': self.access_token_
         }
         json_r = baseRequest.base_request('post', url, data=data, headers=headers).json()
         return json_r
 
     @property
-    def __domain_and_orgaccount(self):
+    def domain_and_orgaccount(self):
         """
-        获取domain和orgaccount值
+        通过login_2获取domain和orgaccount
         :return: {'orgAccount': 'uruqysjoz6oz', 'domainName': 'edbtj1272l'}
         """
-        if self.platform == 'APP':
-            parse_data = self.login_3().get('data').get('accountBook').get('tenant')
-            domain_name = parse_data.get('domainName')
-            org_account = parse_data.get('org').get('orgAccount')
-            return {'orgAccount': org_account, 'domainName': domain_name}
-        else:
-            return
+        parse_data = self.login_2().get('data').get('accountBook').get('tenant')
+        domain_name = parse_data.get('domainName')
+        org_account = parse_data.get('org').get('orgAccount')
+        return {'orgAccount': org_account, 'domainName': domain_name}
 
-    @property
-    def url_with_domain_and_orgaccount(self):
+    def splice_domain_and_orgaccount(self):
         """
-        获取url前缀
+        拼接url前缀
         :return: https://inte-cloud.chanjet.com/cc/ug3qc3gv0h7m/wcw78mp1n3
         """
-        if self.platform == 'APP':
-            url = self.host_addr.replace('0000/0', '{}/{}'.format(self.domain_org.get('orgAccount'),
-                                                                  self.domain_org.get('domainName')))
-        else:
-            url = self.host_addr.replace('0000/0', get_conf_value.get_web_uid())
+        url = self.host_addr.replace('0000/0', '{}/{}'.format(self.do.get('orgAccount'), self.do.get('domainName')))
         return url
 
     @property
-    def __auth(self):
-        if self.platform == 'APP':
-            url = '{}/mobile/cia/graphql?user_req_id=1566209020090_4'.format(self.url)
-            data = {
-                "query": '\n            mutation CreatePassport {\n                passport: '
-                         'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        ' % (
-                             self.access_token, self.domain_org.get('orgAccount')),
-                "mutation": '\n            mutation CreatePassport {\n                passport: '
-                            'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n '
-                            % (self.access_token, self.domain_org.get('orgAccount'))
-            }
-            headers = {
-                'accesstoken': self.access_token
-            }
-            json_r = baseRequest.base_request('post', url, data=data, headers=headers).json()
-            token = json_r.get('data').get('passport')
-            return token
-        else:
-            return get_conf_value.get_web_auth()
+    def auth(self):
+        url = '{}/mobile/cia/graphql?user_req_id=1566209020090_4'.format(self.url)
+        data = {
+            "query": '\n            mutation CreatePassport {\n                passport: '
+                     'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n        ' % (
+                         self.access_token_, self.do.get('orgAccount')),
+            "mutation": '\n            mutation CreatePassport {\n                passport: '
+                        'createPassportWithAccessToken(accessToken: "%s", domainName: "%s")\n            }\n '
+                        % (self.access_token_, self.do.get('orgAccount'))
+        }
+        headers = {
+            'accesstoken': self.access_token_
+        }
+        json_r = baseRequest.base_request('post', url, data=data, headers=headers).json()
+        passport = json_r.get('data').get('passport')
+        return passport
 
     @property
-    def __headers(self):
+    def header(self):
         if self.platform == 'APP':
             headers = {
                 'authorization': 'Bearer %s' % self.auth,
@@ -179,14 +145,14 @@ class Login:
             }
         else:
             headers = {
-                'authorization': self.auth,
-                # 'Content-Type': 'application/json',
+                'authorization': 'Bearer %s' % self.auth,
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, '
                               'like Gecko) Version/12.1.2 Safari/605.1.15'
             }
         return headers
 
-    def session_by_login(self):
+    @property
+    def session(self):
         if self.platform == 'APP':
             url = '{}/mobile/graphql?user_req_id=1566229590096_40'.format(self.url)
             data = {
@@ -205,4 +171,4 @@ class Login:
                 "sort": [],
                 "group": []
             }
-        return baseRequest.session_('post', url, data=data, headers=self.__headers)
+        return baseRequest.session_('post', url, data=data, headers=self.header)

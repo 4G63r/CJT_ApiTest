@@ -4,7 +4,6 @@
 # @Time: 2019-08-19 16:04
 
 from utils.readConfUtil import ReadConfUtil
-from utils.MD5_encode import md5_encode
 
 r = ReadConfUtil()
 
@@ -43,21 +42,11 @@ def get_host_addr():
 def get_account_info():
     """
     获取用户账号密码
-
     :return:
-        如果平台是APP端，返回正常的账号和密码
-        如果平台是WEB端，返回MD5加密后的密码
     """
-    platform_name = get_platform()
     username = r.get_conf_value('account', 'username')
     password = r.get_conf_value('account', 'password')
-
-    if platform_name == 'APP':
-        return {'username': username, 'password': password}
-    elif platform_name == 'WEB':
-        return {'username': username, 'password': md5_encode(password)}
-    else:
-        return
+    return {'username': username, 'password': password}
 
 
 def get_platform():
@@ -66,11 +55,3 @@ def get_platform():
     :return: WEB / APP
     """
     return r.get_conf_value('platform', 'name').upper()
-
-
-def get_web_uid():
-    return r.get_conf_value('web', 'uid')
-
-
-def get_web_auth():
-    return r.get_conf_value('web', 'auth')
