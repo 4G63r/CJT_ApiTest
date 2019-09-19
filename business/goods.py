@@ -3,21 +3,21 @@
 # @Author: songxiao
 # @Time: 2019-08-21 19:22
 
-from common import assertion
-
 
 class Goods:
     """商品相关操作"""
 
-    def __init__(self, url, session):
+    def __init__(self, url, session, assertion=None):
         self.url = url
         self.s = session
+        self.assert_ = assertion
 
     @property
     def token(self):
-        url = '{}/entities/Product/blank?user_req_id=e33e804adx16cb3e8e3f7'.format(self.url)
+        url = '{}/entities/Product/blank?options%5BproductCategoryCode%5D=00&user_req_id=e33e80218x16d4311c389'.format(
+            self.url)
         r = self.s.get(url)
-        if assertion.assert_status_code(r, 200):
+        if self.assert_.assert_status_code_is(r, 200):
             return r.json().get('txnToken')
 
     def get_measure_infos(self):

@@ -23,7 +23,6 @@ class Login:
         self.do = self.domain_and_orgaccount
         self.url = self.splice_domain_and_orgaccount()
         self.auth_ = self.auth
-        self.session_ = self.session
 
     def login_1(self):
         url = '{}/mobile/cia/graphql?user_req_id=1568705092426_198'.format(self.host_addr)

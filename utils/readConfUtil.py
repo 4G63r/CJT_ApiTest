@@ -26,7 +26,6 @@ class ReadConfUtil:
         return read_ini
 
     def get_conf_value(self, section, option):
-        """查询配置文件中的值"""
         try:
             value = self.read_ini.get(section, option)
         except (configparser.NoSectionError, configparser.NoOptionError):
