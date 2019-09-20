@@ -26,3 +26,11 @@ def date_to_timestamp(start_date=None, end_date=None):
     s_stamp = time.mktime(time.strptime(s_time, "%Y-%m-%d %H:%M:%S"))
     e_stamp = time.mktime(time.strptime(e_time, "%Y-%m-%d %H:%M:%S"))
     return int(s_stamp), int(e_stamp)
+
+
+def get_current_timestamp():
+    """
+    获取当前时间戳
+    :return:
+    """
+    return int(time.time() * 1000)
