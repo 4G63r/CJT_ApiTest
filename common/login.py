@@ -4,12 +4,13 @@
 # @Time: 2019-08-19 18:01
 
 from common import baseRequest
-from utils import get_conf_value
+from utils.readConfUtil import ReadConfUtil
 
 
 class Login:
     def __init__(self, username=None, password=None):
-        ua_info = get_conf_value.get_account_info()
+        r = ReadConfUtil()
+        ua_info = r.account_info
         if username is None and password is None:
             self.username = ua_info.get('username')
             self.password = ua_info.get('password')
@@ -17,8 +18,8 @@ class Login:
             self.username = username
             self.password = password
 
-        self.platform = get_conf_value.get_platform()
-        self.host_addr = get_conf_value.get_host_addr()
+        self.platform = r.platform
+        self.host_addr = r.host_addr
         self.access_token_ = self.access_token
         self.do = self.domain_and_orgaccount
         self.url = self.splice_domain_and_orgaccount()
