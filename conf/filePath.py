@@ -21,7 +21,15 @@ testdata_abspath = '{}/testdatas.xlsx'.format(cur_dir.replace('conf', 'testdata'
 testcase_abspath = '{}/testcases.xlsx'.format(cur_dir.replace('conf', 'testcase'))
 
 # report路径
-report_abspath = '{}/report_{}.html'.format(cur_dir.replace('conf', 'report'), cur_time)
+report_dir = cur_dir.replace('conf', 'reports')
+report_abspath = '{}/report_{}.html'.format(report_dir, cur_time)
 
 # log路径
-log_abspath = '{}/log_{}.log'.format(cur_dir.replace('conf', 'log'), cur_time)
+log_dir = cur_dir.replace('conf', 'logs')
+log_abspath = '{}/log_{}.log'.format(log_dir, cur_time)
+
+if not os.path.exists(report_dir):
+    os.mkdir(report_dir)
+
+if not os.path.exists(log_dir):
+    os.mkdir(log_dir)
