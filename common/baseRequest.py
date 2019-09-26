@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*-coding:utf-8 -*-
 
 # @Author: songxiao
 # @Time: 2019-08-19 16:41
@@ -58,13 +59,27 @@ def session_(method, url, headers=None, data=None, timeout=6, verify=False):
             s.get(url, params=data, timeout=timeout, verify=verify)
         elif method.upper() == 'POST':
             s.post(url, json=data, timeout=timeout, verify=verify)
-        elif method.upper() == 'PUT':
-            s.put(url, json=data, timeout=timeout, verify=verify)
-        elif method.upper() == 'DELETE':
-            s.delete(url, json=data, timeout=timeout, verify=verify)
         else:
             s = None
     except AttributeError:
         raise AttributeError
     else:
         return s
+
+
+def base_session(session, method, url, data=None, timeout=6):
+    try:
+        if method.upper() == 'GET':
+            res = session.get(url, params=data, timeout=timeout)
+        elif method.upper() == 'POST':
+            res = session.post(url, json=data, timeout=timeout)
+        elif method.upper() == 'PUT':
+            res = session.put(url, json=data, timeout=timeout)
+        elif method.upper() == 'DELETE':
+            res = session.delete(url, json=data, timeout=timeout)
+        else:
+            res = None
+    except AttributeError:
+        raise AttributeError
+    else:
+        return res

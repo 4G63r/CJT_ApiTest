@@ -124,3 +124,5 @@ class JhdReceipt:
         r = self.s.post(url, json=data)
         if self.assert_.assert_status_code(r, 200):
             print('成功创建进货单，id<%s>' % r.json().get('id'))
+
+

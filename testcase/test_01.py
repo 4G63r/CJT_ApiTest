@@ -16,7 +16,7 @@ def open():
     print("最后关闭浏览器")
 
 
-def test_s1(open):
+def test_s1():
     print("用例1：搜索python-1")
 
     # 如果第一个用例异常了，不影响其他的用例执行
