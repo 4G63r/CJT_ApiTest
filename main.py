@@ -3,24 +3,11 @@
 # @Author: songxiao
 # @Time: 2019-08-21 13:43
 
-from common.login import Login
-from common import assertion
-# from business.warehouse import WarehouseBusiness
-from business.custVendor import CustVendor
-# from business.goods import Goods
-from business.jhdReceipt import JhdReceipt
 
-login = Login()
-front_url = login.url
-s = login.session
+import subprocess
+from conf import filePath
 
-c = CustVendor(front_url, s, assertion)
-# g = Goods(front_url, s)
-
-# j = JhdReceipt(front_url, s, assertion)
-# for i in range(10):
-#     j.create_jhd()
-
-# c.create_vendor('测试111')
-print(c.get_vendor_infos())
-c.delete_vendor()
+# command = 'pytest'
+command = 'pytest --html={} --self-contained-html'.format(filePath.report_abspath)
+r = subprocess.call(command, shell=True)
+print(r)

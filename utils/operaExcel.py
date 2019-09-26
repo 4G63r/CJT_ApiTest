@@ -7,7 +7,7 @@ import os
 from openpyxl import load_workbook
 
 curPath = os.path.abspath(os.path.dirname(__file__))
-case_path = '%s/cases.xlsx' % curPath.replace('utils', 'testcase')
+case_path = '%s/testcases.xlsx' % curPath.replace('utils', 'testcase')
 
 
 class OperaExcel:

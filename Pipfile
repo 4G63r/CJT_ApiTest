@@ -7,9 +7,9 @@ verify_ssl = true
 
 [packages]
 requests = "*"
-openpyxl = "*"
-pytest-allure-adaptor = "*"
 pytest = "*"
+pytest-html = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.7"
