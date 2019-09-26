@@ -17,10 +17,10 @@ cur_time = time.strftime('%Y%m%d_%H%M%S')
 # testdata路径
 testdata_abspath = '{}/testdatas.xlsx'.format(cur_dir.replace('conf', 'testdata'))
 
-# testcase目录
+# testcase路径
 testcase_abspath = '{}/testcases.xlsx'.format(cur_dir.replace('conf', 'testcase'))
 
-# report.html路径
+# report路径
 report_abspath = '{}/report_{}.html'.format(cur_dir.replace('conf', 'report'), cur_time)
 
 # log路径
