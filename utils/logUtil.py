@@ -4,31 +4,28 @@
 # @Author: songxiao
 # @Time: 2019-09-24 20:09
 
-import os
 import logging
 import logging.handlers as hd
-
-cur_path = os.path.abspath(os.path.dirname(__file__))
-log_path = cur_path.replace('utils', 'log')
+from conf import filePath
 
 
-class LoggerUtil:
+class LogUtil:
     def __init__(self):
         self.logger = logging.getLogger("CJT_ApiTest")
         # 设置日志级别
         self.logger.setLevel(logging.INFO)
-        # 日志内容输出格式设置
+        # 规定日志内容输出格式
         # fmt = '%(asctime)s  %(filename)s  %(funcName)s [line:%(lineno)d] %(levelname)s %(message)s'
         fmt = '%(asctime)s %(levelname)s %(message)s'
-        datefmt = '%a, %d %b %Y %H:%M:%S'
-        format = logging.Formatter(fmt, datefmt)
-        # 输出日志到文件中
-        handle_1 = hd.TimedRotatingFileHandler(log_path, backupCount=20, encoding="utf-8")
-        handle_1.setFormatter(format)
+        date_fmt = '%a, %d %b %Y %H:%M:%S'
+        format_ = logging.Formatter(fmt, date_fmt)
+        # 输出日志到文件
+        handle_1 = hd.TimedRotatingFileHandler(filePath.log_abspath, backupCount=20, encoding="utf-8")
+        handle_1.setFormatter(format_)
         handle_1.setLevel(logging.INFO)
         # 输出日志到控制台
         hs = logging.StreamHandler()
-        hs.setFormatter(format)
+        hs.setFormatter(format_)
         hs.setLevel(logging.INFO)
         # 避免log重复
         if not self.logger.handlers:
