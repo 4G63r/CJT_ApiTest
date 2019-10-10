@@ -10,6 +10,8 @@ requests = "*"
 pytest = "*"
 pytest-html = "*"
 openpyxl = "*"
+xlrd = "*"
+jsonpath = "*"
 
 [requires]
 python_version = "3.7"

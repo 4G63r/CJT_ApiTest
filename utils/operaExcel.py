@@ -63,3 +63,39 @@ class OperaExcel:
             self.wb.save(self.file_name)
         except Exception as e:
             print(e)
+
+    def load_excel_data(self):
+        """加载excel数据，以第一列数据为键，保存各行数据"""
+
+        try:
+            datas = {}
+            for i in self.get_all_sheets():
+                sheet = self.wb[i]
+                for row in range(1, sheet.max_row):
+                    # 每一行的数据在row_data 数组里
+                    row_data = self.get_row_data(row)
+                    datas[row_data[0]] = row_data
+            return datas
+        except Exception as e:
+            raise ValueError("加载excel数据出现异常,文件：%s，异常：%s" % (self.file_name, e))
+
+    def get_row_data(self, row):
+        row_datas = []
+        for cell in list(self.ws.rows)[row]:
+            row_datas.append(cell.value)
+        return row_datas
+
+    def get_excel_data_by_key(self, key):
+        """根据关键列data获取sheet里行数据"""
+        datas = self.load_excel_data()
+        return datas.get(key)
+
+    def all_case_data(self):
+        """根据是否执行获取全部cases列表"""
+        all_case_datas = []
+        for row in range(2, self.max_row + 1):
+            is_run = self.get_cell_value(row, 3)
+            if is_run == 1:  # 执行
+                all_case_datas.append(self.get_cell_value(row, 4))
+
+        return all_case_datas
